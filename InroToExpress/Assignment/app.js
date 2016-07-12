@@ -29,7 +29,7 @@ app.get("/speak/:animal/", function(req, res){
             sound = "Glub";
             break;
         default:
-        sound = "Say What?!";
+        sound = "What?!";
             
     };
     res.send("The "+animal+" says '"+sound+"'!")
