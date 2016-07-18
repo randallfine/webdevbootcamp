@@ -10,15 +10,17 @@ app.set("view engine","ejs");
 // Schema setup
 var campgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 });
 
 var Campground = mongoose.model("Campground", campgroundSchema);
 
-Campground.create(
+/*Campground.create(
     {
-        name: "Salmon Creek", 
-        image: "https://farm8.staticflickr.com/7252/7626464792_3e68c2a6a5.jpg"
+       name: "Granite Hill", 
+       image: "https://farm4.staticflickr.com/3130/2770459706_3aed20703e.jpg",
+       description: "This is a huge granite hill, no bathrooms, no water, Beautiful granite!!"
         
     }, function(err, campground){
         if(err){
@@ -27,13 +29,9 @@ Campground.create(
             console.log("NEWLY CREATED CAMPGROUND: ");
             console.log(campground);
         }
-    })
+    });*/
 
-var camps = [
-        {name: "Salmon Creek", image: "https://farm8.staticflickr.com/7252/7626464792_3e68c2a6a5.jpg"},
-        {name: "Granite Hill", image: "https://farm4.staticflickr.com/3130/2770459706_3aed20703e.jpg"},
-        {name: "South Fork", image: "https://farm9.staticflickr.com/8422/7842069486_c61e4c6025.jpg"}
-];
+
     
 app.get("/", function(req, res){
     res.render("landing");
@@ -41,8 +39,14 @@ app.get("/", function(req, res){
 
 app.get("/campgrounds", function(req, res){
     
+    Campground.find({}, function(err, allCampgrounds){
+        if(err){
+            console.log(err);
+        } else {
+        res.render("index", {camps: allCampgrounds});
+        }
+    });
     
-    res.render("campgrounds", {camps: camps});
 });
 
 app.get("/campgrounds/new", function(req, res) {
@@ -53,8 +57,18 @@ app.post("/campgrounds", function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var newCamp = {name: name, image: image}
-    camps.push(newCamp);
-    res.redirect("/campgrounds");;
+    Campground.create(newCamp, function(err, newlyCreated){
+        if(err){
+            console.log(err);
+        } else {
+            res.redirect("/campgrounds");
+        }
+    })
+    
+});
+
+app.get("/campgrounds/:id", function(req, res) {
+    res.render("show");
 });
 
 app.listen(process.env.PORT, process.env.IP, function(){
