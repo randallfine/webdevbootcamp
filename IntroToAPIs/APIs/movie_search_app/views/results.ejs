@@ -1,0 +1,10 @@
+<h1>Results Page</h>
+<br/>
+<a href="/"><button>Back to Search</button></a>
+<% data.Search.map((movie) => { %>
+    <div>
+        <h2><%=movie.Title%></h2>
+        <p><em><%= movie.Year %></em></p>
+    </div>
+    <hr/>
+<% })  %>
